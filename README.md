@@ -1,3 +1,4 @@
+![](october quater-1951-2017.gif)<br>
 <strong>Metadata</strong><br>
 Data Source: Statistics Canada<br>
 Date Updated: September 27, 2018<br>
