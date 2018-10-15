@@ -1,4 +1,5 @@
 <a href="https://open-data-government-of-alberta.github.io/October-Quarter-Total-Population-Estimate-Alberta-1951---Current/">![](october-quater-1951-2017.gif)</a>
+<br>
 <strong>Metadata</strong><br>
 Data Source: Statistics Canada<br>
 Date Updated: September 27, 2018<br>
