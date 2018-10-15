@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        div#main {
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <!-- preparing a DOM with width and height for ECharts -->
+    <div id="main" style="width:800px; height:400px;"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/4.1.0/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
+    <script lang="babel" type="text/babel">
+        const log = console.log;
+        const myChart = echarts.init(document.getElementById('main'));
+
+        d3.csv("population-estimates-ab-quartely-1951-to-current.csv")
+          .then(function(populationEstms) {
+            
+            //Convert all strings to intergers
+            const keys = populationEstms["columns"];
+            populationEstms.forEach(d => {
+                keys.forEach(p => {
+                    if(d[p] !== "") d[p] = parseInt(d[p]);
+                });
+            });
+
+            //Added these to extend years range
+            //Not ideal but works for now
+            populationEstms.unshift({
+                "Year": populationEstms[0]["Year"] - 1, 
+                "January 1": "",
+                "April 1": "",
+                "July 1": "",
+                "October 1": "" 
+            });
+            populationEstms.push({
+                "Year": populationEstms[populationEstms.length -1]["Year"] + 1, 
+                "January 1": "",
+                "April 1": "",
+                "July 1": "",
+                "October 1": "" 
+            });
+
+            const option = {
+                title: {
+                    left: "center",
+                    text: "October Quater, Alberta Total Population Estimates: 1951 - 2017"
+                },
+                tooltip: {
+                    trigger: "none",
+                    axisPointer: {
+                        type: "cross"
+                    }
+                },
+                xAxis: [
+                    { 
+                        data: populationEstms.map(d => d["Year"]),
+                        axisLabel: {
+                            interval: 9,
+                            showMaxLabel: true,
+                            showMinLabel: true
+                        },
+                        axisPointer: {
+                            label: {
+                                formatter: params => `${params.value} : ${params.seriesData[0].data.toLocaleString()}`,
+                                margin: -45
+                            }
+                        },
+                        boundaryGap: false,
+                        name: "Year"
+                    }
+                ],
+                yAxis: {
+                    name: "Population Estimate",
+                    axisPointer: {
+                        show: false
+                    }
+                },
+                series: [
+                    {
+                        data: populationEstms.map(d => d["October 1"]),
+                        type: "line",
+                        smooth: true,
+                        name: "October 1"
+                    }
+                ]
+            };
+
+            //set options and render chart
+            myChart.setOption(option);
+        });
+    </script>
+</body>
+</html>
